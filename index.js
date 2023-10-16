@@ -2,6 +2,10 @@ const express = require('express')      //다운받은 express 모듈을 가져�
 const app = express()                   //function을 이용해서 새로운 app을 만들고
 const port = 5000                       //5000번 포트를 백 서버로 둠
 const bodyParser = require('body-parser');
+
+const config = require('./config/key');
+
+
 const { User } = require("./models/User");
 
 //application/x-www-form-urlencoded 정보 분석
@@ -11,7 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 const mongoose = require('mongoose')    //mongoose를 이용해서 mongoDB 연결
-mongoose.connect('mongodb+srv://jay:aaaa1234@cluster0.sddrall.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true, useUnifiedTopology: true
 }).then(() => console.log('MongDB Connected...'))   //연결 완료시 console
   .catch(err => console.log(err))                   //에러시 console
