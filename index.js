@@ -4,8 +4,7 @@ const port = 5000                       //5000번 포트를 백 서버로 둠
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 const config = require('./config/key');
-const { auth } = require('./middleware/auth');
-
+const { auth } = require('./middleware/auth')
 const { User } = require("./models/User");
 
 //application/x-www-form-urlencoded 정보 분석
@@ -56,7 +55,8 @@ mongoose.connect(config.mongoURI, {
 
     app.post('/api/users/login', (req, res) => {
         //요청된 이메일을 데이터베이스에서 찾기
-        User.findOne({ email: req.body.email }).then(user => {
+        User.findOne({ email: req.body.email })
+        .then(user => {
             if(!user) {
                 return res.json({
                     loginSuccess: false,
@@ -101,5 +101,28 @@ mongoose.connect(config.mongoURI, {
             Image: req.user.Image
         })
     })
+
+    //로그아웃 route
+    app.get('/api/users/logout', auth, (req, res) => {
+        //console.log('req.user', req.user)
+        // User.findOneAndUpdate({ _id: req.user._id }, 
+        //     { token: "" }
+        //     , (err, user) => {
+        //     if (err) return res.json({ success: false, err});
+        //     return res.status(200).send({
+        //         success: true
+        //     })
+        // })
+
+        //promise문 수정
+        User.findOneAndUpdate({ _id: req.user._id }, { token: "" })
+        .then(() => {
+            return res.status(200).send({success: true});
+        })
+        .catch((err) => {
+            return res.json({ success: false, err});
+        })
+    })
+    
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))   //이 앱이 port 5000번에서 실행
