@@ -1,10 +1,9 @@
 const express = require('express')      //다운받은 express 모듈을 가져옴
 const app = express()                   //function을 이용해서 새로운 app을 만들고
-const port = 5000                       //5000번 포트를 백 서버로 둠
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const config = require('./config/key');
-const { auth } = require('./middleware/auth')
+const { auth } = require('./middleware/auth');
 const { User } = require("./models/User");
 
 //application/x-www-form-urlencoded 정보 분석
@@ -23,6 +22,8 @@ mongoose.connect(config.mongoURI, {
 
 
     app.get('/', (req,res) => res.send('Hello World!~~안녕하세요~'))     //루트 디렉토리에 'Hello World' 출력
+
+    app.get('/api/hello', (req,res) => res.send("Hello World~"))
 
 
     app.post('/api/users/register', (req, res) => {
@@ -125,4 +126,6 @@ mongoose.connect(config.mongoURI, {
     })
     
 
+
+const port = 5000                       //5000번 포트를 백 서버로 둠
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))   //이 앱이 port 5000번에서 실행
